@@ -13,18 +13,10 @@
       <h1>Expense Tracker</h1>
     </header>
     <div class="container">
-      <form id="new-form" onsubmit="resgisterUser(event)">
-        <h3>Register New User</h3>
-        <div class="msg msg-text">Enter all the details</div>
+      <form id="new-form" onsubmit="login(event)">
+        <h3>Login</h3>
+        <div class="msg msg-text">Enter login details</div>
         <div class="form-inputs">
-          <label for="userName">Name:</label>
-          <input
-            type="text"
-            id="userName"
-            name="userName"
-            placeholder="Enter Name"
-            required
-          />
           <label for="email">Email:</label>
           <input
             type="email"
@@ -41,16 +33,16 @@
             placeholder="Enter password"
             required
           />
-          <button type="submit" class="btn sign-up">REGISTER USER</button>
+          <button type="submit" class="btn login">LOGIN</button>
         </div>
       </form>
-      <div class="sign-in">
-        <span>Existing user: </span>
-        <button class="btn">SIGN IN</button>
+      <div class="sign-up">
+        <span>New user : </span>
+        <button class="btn">SIGN UP</button>
       </div>
     </div>
     <div class="toast"></div>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js"></script>
-  <script src="./signup.js"></script>
+  <script src="./login.js"></script>
 </html>

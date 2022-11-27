@@ -81,3 +81,13 @@ li {
   border: none;
   border-radius: 3px;
 }
+
+/* TOAST */
+.toast div {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  color: white;
+}

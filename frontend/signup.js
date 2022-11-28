@@ -29,9 +29,10 @@ const resgisterUser = async (e) => {
       data
     );
     createToast(response.data.msg, "green");
-    name.value = "";
-    email.value = "";
-    password.value = "";
+    window.location.href = "./login.html";
+    // name.value = "";
+    // email.value = "";
+    // password.value = "";
   } catch (error) {
     // console.log(error.response.data);
     if (error.response.status == 400) {

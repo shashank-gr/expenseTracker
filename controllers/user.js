@@ -48,6 +48,7 @@ exports.postLogin = async (req, res) => {
       bcrypt.compare(password, result.password, (err, result) => {
         // result == true
         if (err) {
+          //  throw new Error("Internal server error")
           return res.status(500).send({ msg: "Internal server error" });
         }
         if (result) {

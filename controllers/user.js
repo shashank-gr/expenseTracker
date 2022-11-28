@@ -18,7 +18,7 @@ exports.postLogin = async (req, res) => {
     const result = await User.findOne({ where: { email: req.body.email } });
     console.log(result);
     if (!result) {
-      return res.status(404).send({ msg: "user not found" });
+      return res.status(404).send({ msg: "user not found. Please signup" });
     } else {
       if (result.password === req.body.password) {
         return res.status(200).send({ msg: "login success" });

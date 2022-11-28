@@ -13,6 +13,10 @@ h1 {
 h3 {
   margin-bottom: 20px;
 }
+a {
+  text-decoration: none;
+  color: white;
+}
 .container {
   margin: auto;
   width: 600px;
@@ -47,6 +51,7 @@ input {
   letter-spacing: 0.5px;
   cursor: pointer;
 }
+
 .erorr {
   background-color: orangered;
   color: white;

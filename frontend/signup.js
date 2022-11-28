@@ -36,7 +36,7 @@ const resgisterUser = async (e) => {
     // console.log(error.response.data);
     console.log(error);
     if (error.response.status == 400) {
-      createToast("user already exists", "orangered");
+      createToast("user already exists with this email", "orangered");
     }
   }
 };

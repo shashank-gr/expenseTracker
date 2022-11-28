@@ -1,7 +1,7 @@
 const toast = document.querySelector(".toast");
 
 //creating toastmessage
-const createToast = (msg, color) => {
+const createToast = (msg, color = "orangered") => {
   const div = document.createElement("div");
   div.innerHTML = msg;
   div.style.backgroundColor = color;
@@ -21,10 +21,16 @@ const login = async (e) => {
     createToast(response.data.msg, "green");
   } catch (error) {
     console.log(error);
-    if (error.response.status == 404) {
-      createToast(error.response.data.msg, "orangered");
+    if (error.response.status == 400) {
+      createToast(error.response.data.msg);
     } else if (error.response.status == 401) {
-      createToast(error.response.data.msg, "orangered");
+      createToast(error.response.data.msg);
+    } else if (error.response.status == 404) {
+      createToast(error.response.data.msg);
+    } else if (error.response.status == 500) {
+      createToast(error.response.data.msg);
+    } else {
+      console.log(error);
     }
   }
 };

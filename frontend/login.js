@@ -19,6 +19,8 @@ const login = async (e) => {
   try {
     const response = await axios.post("http://localhost:3000/user/login", data);
     createToast(response.data.msg, "green");
+    // console.log(response.data);
+    localStorage.setItem("token", response.data.token);
     window.location.href = "./expense.html";
   } catch (error) {
     console.log(error);

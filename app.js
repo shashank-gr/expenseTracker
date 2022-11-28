@@ -8,6 +8,8 @@ const cors = require("cors");
 const sequelize = require("./util/database");
 const userRoute = require("./routes/user");
 const expenseRoute = require("./routes/expense");
+const User = require("./model/user");
+const Expense = require("./model/expense");
 
 const app = express();
 
@@ -20,6 +22,10 @@ app.use((req, res) => {
   console.log(req.url);
   res.send("Hello from express");
 });
+
+//one to many
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 sequelize
   .sync()

@@ -1,7 +1,12 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 
 const User = require("../model/user");
+
+const generateJWT = (obj) => {
+  return jwt.sign(obj, process.env.JWT_SECRET);
+};
 
 exports.postSignUp = (req, res) => {
   const { name, email, password } = req.body;
@@ -40,19 +45,25 @@ exports.postLogin = async (req, res) => {
   }
 
   try {
-    const result = await User.findOne({ where: { email: req.body.email } });
+    const user = await User.findOne({ where: { email: req.body.email } });
     // console.log(result);//null or data values
-    if (!result) {
+    if (!user) {
       return res.status(404).send({ msg: "user not found. Please signup" });
     } else {
-      bcrypt.compare(password, result.password, (err, result) => {
+      bcrypt.compare(password, user.password, (err, result) => {
         // result == true
         if (err) {
           //  throw new Error("Internal server error")
           return res.status(500).send({ msg: "Internal server error" });
         }
         if (result) {
-          return res.status(200).send({ msg: "login success" });
+          return res.status(200).send({
+            msg: "login success",
+            token: generateJWT({
+              userId: user.id,
+              name: user.name,
+            }),
+          });
         } else {
           return res.status(401).send({ msg: "password incorrect" });
         }

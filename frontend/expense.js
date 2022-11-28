@@ -1,5 +1,6 @@
 const form = document.querySelector("#form");
 const ul = document.querySelector(".list");
+axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
 
 const onClick = async (e) => {
   if (e.target.classList == "btn btn-danger float-end") {
@@ -72,6 +73,7 @@ const onSubmit = async (e) => {
 
 const fetchAllExpenses = async () => {
   try {
+    // const headers = { authorization: localStorage.getItem("token") };
     const response = await axios.get(
       "http://localhost:3000/expense/getExpense"
     );

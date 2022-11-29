@@ -22,6 +22,9 @@ const User = sequelize.define("user", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  orderId: {
+    type: DataTypes.STRING,
+  },
 });
 
 module.exports = User;

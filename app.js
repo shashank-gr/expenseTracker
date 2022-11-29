@@ -8,6 +8,7 @@ const cors = require("cors");
 const sequelize = require("./util/database");
 const userRoute = require("./routes/user");
 const expenseRoute = require("./routes/expense");
+const razorPayRoute = require("./routes/razorPay");
 const User = require("./model/user");
 const Expense = require("./model/expense");
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use("/user", userRoute);
 app.use("/expense", expenseRoute);
+app.use("/razorPay", razorPayRoute);
 
 app.use((req, res) => {
   console.log(req.url);

@@ -1,7 +1,79 @@
 const form = document.querySelector("#form");
 const ul = document.querySelector(".list");
+const goPremium = document.querySelector("#go-premium");
 axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+let order;
 
+const verifySignature = async (
+  razorpay_payment_id,
+  razorpay_order_id,
+  razorpay_signature
+) => {
+  try {
+    const data = { razorpay_payment_id, razorpay_order_id, razorpay_signature };
+    const respone = await axios.post(
+      "http://localhost:3000/razorPay/verifySignature",
+      data
+    );
+    console.log(respone.data.msg);
+    document.getElementById("rzp-button1").remove();
+  } catch (error) {
+    console.log(error);
+    if (error.response.status == 400) {
+      console.log(error.response.data.msg);
+    }
+  }
+};
+const onPay = (e) => {
+  var options = {
+    key: "rzp_test_LoUvvQ4sZ9FkMo", // Enter the Key ID generated from the Dashboard
+    amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    currency: "INR",
+    name: "Shashanka Inc.",
+    description: "Get Premium expense tracker features",
+    // image: "https://example.com/your_logo",
+    order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    handler: function (response) {
+      // alert(response.razorpay_payment_id);
+      // alert(response.razorpay_order_id);
+      // alert(response.razorpay_signature);
+      verifySignature(
+        response.razorpay_payment_id,
+        response.razorpay_order_id,
+        response.razorpay_signature
+      );
+    },
+    theme: {
+      color: "#0a58ca",
+    },
+  };
+  var rzp1 = new Razorpay(options);
+  rzp1.on("payment.failed", function (response) {
+    alert(response.error.code);
+    alert(response.error.description);
+    alert(response.error.source);
+    alert(response.error.step);
+    alert(response.error.reason);
+    alert(response.error.metadata.order_id);
+    alert(response.error.metadata.payment_id);
+  });
+
+  rzp1.open();
+};
+
+const onGoPremium = async (e) => {
+  try {
+    const response = await axios.post("http://localhost:3000/razorPay/order");
+    order = response.data.order;
+    console.log(order);
+    goPremiumn.remove();
+    const btnHTML = `<button id="rzp-button1" class="btn btn-success">pay</button>`;
+    ul.insertAdjacentHTML("afterend", btnHTML);
+    document.getElementById("rzp-button1").addEventListener("click", onPay);
+  } catch (error) {
+    console.log(error);
+  }
+};
 const onClick = async (e) => {
   if (e.target.classList == "btn btn-danger float-end") {
     // console.log(e.target.parentElement);
@@ -92,3 +164,4 @@ const fetchAllExpenses = async () => {
 form.addEventListener("submit", onSubmit);
 document.addEventListener("DOMContentLoaded", fetchAllExpenses);
 ul.addEventListener("click", onClick);
+goPremium.addEventListener("click", onGoPremium);

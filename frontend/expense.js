@@ -1,9 +1,59 @@
 const form = document.querySelector("#form");
 const ul = document.querySelector(".list");
+const ulOthers = document.querySelector(".list-others");
 const goPremium = document.querySelector("#go-premium");
 axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
 let order;
 
+const displayOtherUserExpenses = ({ amount, description, category }) => {
+  const li = document.createElement("li");
+  li.classList = "list-group-item";
+  li.appendChild(
+    document.createTextNode(`${amount} ${description} ${category}`)
+  );
+  ulOthers.insertAdjacentElement("beforeend", li);
+};
+
+const getAllUsersExpenses = async (e) => {
+  try {
+    document.querySelector("#get-all-expenses").classList =
+      "btn btn-success disabled";
+    const response = await axios.get(
+      "http://localhost:3000/premiumUser/getAllExpenses"
+    );
+    console.log(response.data.expenses);
+    const expenses = response.data.expenses;
+    console.log(response.data.msg);
+    expenses.forEach((expense) => {
+      displayOtherUserExpenses(expense);
+    });
+    ulOthers.insertAdjacentHTML(
+      "afterend",
+      `<button id="close-all-expenses" class="btn btn-danger">close Expenses</button>`
+    );
+    document
+      .querySelector("#close-all-expenses")
+      .addEventListener("click", () => {
+        document.querySelector(".list-others").innerHTML = "";
+        document.querySelector("#close-all-expenses").remove();
+        document.querySelector("#get-all-expenses").classList =
+          "btn btn-success";
+      });
+  } catch (error) {
+    console.log(err);
+    if (error.response.status == 500) {
+      console.log(error.response.data.msg);
+    }
+  }
+};
+const premiumFeature = () => {
+  goPremium.remove();
+  document.querySelector("body").style.backgroundColor = "#222";
+  const getAllExpenses = `<button id="get-all-expenses" class="btn btn-success">All Users Expenses</button>`;
+  ul.insertAdjacentHTML("afterend", getAllExpenses);
+  const btnGetAllExpenses = document.querySelector("#get-all-expenses");
+  btnGetAllExpenses.addEventListener("click", getAllUsersExpenses);
+};
 const verifySignature = async (
   razorpay_payment_id,
   razorpay_order_id,
@@ -17,6 +67,7 @@ const verifySignature = async (
     );
     console.log(respone.data.msg);
     document.getElementById("rzp-button1").remove();
+    premiumFeature();
   } catch (error) {
     console.log(error);
     if (error.response.status == 400) {
@@ -66,7 +117,7 @@ const onGoPremium = async (e) => {
     const response = await axios.post("http://localhost:3000/razorPay/order");
     order = response.data.order;
     console.log(order);
-    goPremiumn.remove();
+    goPremium.remove();
     const btnHTML = `<button id="rzp-button1" class="btn btn-success">pay</button>`;
     ul.insertAdjacentHTML("afterend", btnHTML);
     document.getElementById("rzp-button1").addEventListener("click", onPay);
@@ -149,7 +200,13 @@ const fetchAllExpenses = async () => {
     const response = await axios.get(
       "http://localhost:3000/expense/getExpense"
     );
-    console.log(response);
+    // console.log(response);//all the expenses
+    const premium = await axios.get(
+      "http://localhost:3000/premiumUser/isPremium"
+    );
+    if (premium.data.isPremium) {
+      premiumFeature();
+    }
     response.data.expenses.forEach((expense) => {
       displayExpense(expense);
     });

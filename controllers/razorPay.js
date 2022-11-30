@@ -36,9 +36,10 @@ exports.postVerifySignature = async (req, res) => {
   // console.log("sig received ", req.body.razorpay_signature);
   // console.log("sig generated ", expectedSignature);
 
-  if (expectedSignature === req.body.razorpay_signature)
+  if (expectedSignature === req.body.razorpay_signature) {
+    req.user.update({ isPremium: true });
     return res.status(200).send({ msg: "Payment success" });
-  else {
+  } else {
     res.status(400).send({ msg: "Payment failed" });
   }
 };

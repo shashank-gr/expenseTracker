@@ -10,6 +10,7 @@ const userRoute = require("./routes/user");
 const expenseRoute = require("./routes/expense");
 const razorPayRoute = require("./routes/razorPay");
 const premiumRoute = require("./routes/premium");
+const forgotPassRoute = require("./routes/forgotPass");
 const User = require("./model/user");
 const Expense = require("./model/expense");
 
@@ -21,6 +22,7 @@ app.use("/user", userRoute);
 app.use("/expense", expenseRoute);
 app.use("/razorPay", razorPayRoute);
 app.use("/premiumUser", premiumRoute);
+app.use("/password", forgotPassRoute);
 
 app.use((req, res) => {
   console.log(req.url);

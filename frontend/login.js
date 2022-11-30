@@ -1,4 +1,5 @@
 const toast = document.querySelector(".toast");
+const btnForgotPass = document.querySelector(".btn.btn-forgot-pass");
 
 //creating toastmessage
 const createToast = (msg, color = "orangered") => {
@@ -37,3 +38,33 @@ const login = async (e) => {
     }
   }
 };
+//post request to reset password
+const forgetPassSubmit = async (e) => {
+  e.preventDefault();
+  // console.log(email);
+  try {
+    const email = e.target.querySelector("#forgot-pass-id").value;
+    const data = { email };
+    const response = await axios.post(
+      "http://localhost:3000/password/forgotpassword",
+      data
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+const forgotPass = () => {
+  const html = `<div id="container">
+  <form id="new-form" onsubmit="forgetPassSubmit(event)">
+    <p style="margin-bottom: 10px;">Please enter email address to <strong>RESET</strong> password</p>
+      <div class="form-inputs">
+        <input type="email" id='forgot-pass-id' name='email' placeholder="Enter Email" Required/>
+        <button type="submit" class="btn" id='submit-forgot-pass'>REST PASSWORD</button>
+        </div>
+  </form>
+</div>`;
+  btnForgotPass.setAttribute("disabled", "");
+  document.querySelector(".action-btns").insertAdjacentHTML("afterend", html);
+};
+
+btnForgotPass.addEventListener("click", forgotPass);

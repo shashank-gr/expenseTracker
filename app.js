@@ -13,6 +13,7 @@ const premiumRoute = require("./routes/premium");
 const forgotPassRoute = require("./routes/forgotPass");
 const User = require("./model/user");
 const Expense = require("./model/expense");
+const ResetPass = require("./model/reset-password");
 
 const app = express();
 
@@ -32,6 +33,9 @@ app.use((req, res) => {
 //one to many
 User.hasMany(Expense);
 Expense.belongsTo(User);
+//one to many
+User.hasMany(ResetPass);
+ResetPass.belongsTo(User);
 
 sequelize
   .sync()

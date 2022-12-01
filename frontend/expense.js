@@ -46,13 +46,27 @@ const getAllUsersExpenses = async (e) => {
     }
   }
 };
+
+const generateReport = () => {
+  console.log("getting report");
+};
+
 const premiumFeature = () => {
   goPremium.remove();
   document.querySelector("body").style.backgroundColor = "#222";
-  const getAllExpenses = `<button id="get-all-expenses" class="btn btn-success">All Users Expenses</button>`;
-  ul.insertAdjacentHTML("afterend", getAllExpenses);
+  const div = document.createElement("div");
+  div.classList = "premium-btns-container";
+  div.style.margin = "1rem auto";
+  const btns = `<button id="get-all-expenses" class="btn btn-success">All Users Expenses</button>
+  <button id="download-report"  class="btn btn-success">Generate Report</button>`;
+  div.insertAdjacentHTML("afterbegin", btns);
+  ul.insertAdjacentElement("afterend", div);
+
   const btnGetAllExpenses = document.querySelector("#get-all-expenses");
   btnGetAllExpenses.addEventListener("click", getAllUsersExpenses);
+
+  const btnGenerateReport = document.querySelector("#download-report");
+  btnGenerateReport.addEventListener("click", generateReport);
 };
 const verifySignature = async (
   razorpay_payment_id,

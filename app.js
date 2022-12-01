@@ -14,6 +14,7 @@ const forgotPassRoute = require("./routes/forgotPass");
 const User = require("./model/user");
 const Expense = require("./model/expense");
 const ResetPass = require("./model/reset-password");
+const FileLink = require("./model/file-link");
 
 const app = express();
 
@@ -36,6 +37,9 @@ Expense.belongsTo(User);
 //one to many
 User.hasMany(ResetPass);
 ResetPass.belongsTo(User);
+//one to many
+User.hasMany(FileLink);
+FileLink.belongsTo(User);
 
 sequelize
   .sync()

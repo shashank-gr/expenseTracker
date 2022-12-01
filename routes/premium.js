@@ -13,5 +13,9 @@ router.get(
   userMiddelware.userAuthenticate,
   premiumController.getIsPremium
 );
-
+router.get(
+  "/generateReport",
+  userMiddelware.userAuthenticate,
+  premiumController.getGenerateReport
+);
 module.exports = router;

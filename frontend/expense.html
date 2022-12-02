@@ -78,7 +78,7 @@
           </div>
         </div>
         <div>
-          <input type="hidden" id="expense-id" value="" />
+          <input type="hidden" id="expense-id" required />
         </div>
         <div class="submit-button text-center">
           <button class="btn btn-primary" type="submit">Track Expense</button>
@@ -99,6 +99,21 @@
         <div></div>
       </div>
     </div>
+    <form id="paginate-rows">
+      <div class="input-group mt-5 mb-3 w-25">
+        <input
+          type="number"
+          class="form-control form-control-sm"
+          id="paginate-rows-number"
+          placeholder="paginate rows"
+          required
+        />
+        <div class="input-group-append">
+          <button class="btn btn-primary btn-sm" type="submit">Paginate</button>
+        </div>
+      </div>
+    </form>
+
     <!-- <div class="toast">
       <div>hello all</div>
     </div> -->

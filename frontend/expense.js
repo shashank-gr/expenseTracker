@@ -5,6 +5,7 @@ const goPremium = document.querySelector("#go-premium");
 const toast = document.querySelector(".toast-msg");
 const paginationDiv = document.querySelector(".pagination-btns");
 const paginationDivOthers = document.querySelector(".pagination-btns-others");
+const paginateRows = document.querySelector("#paginate-rows");
 
 let order;
 
@@ -81,9 +82,9 @@ const getAllUsersExpenses = async (page = 1) => {
       "btn btn-success disabled";
     document.querySelector("#close-all-expenses").classList = "btn btn-danger";
     ulOthers.innerHTML = "";
-
+    const paginate = localStorage.getItem("paginate-rows") || 5;
     const response = await axios.get(
-      `http://localhost:3000/premiumUser/getAllExpenses?page=${page}`
+      `http://localhost:3000/premiumUser/getAllExpenses?page=${page}&paginate=${paginate}`
     );
     // console.log(response.data.pagination);
     const expenses = response.data.expenses;
@@ -332,8 +333,10 @@ const displayPagination = ({
 const fetchPaginationExpenses = async (page = 1) => {
   try {
     ul.innerHTML = "";
+    const paginate = localStorage.getItem("paginate-rows") || 5;
+    // console.log(paginate);
     const response = await axios.get(
-      `http://localhost:3000/expense/getExpenses?page=${page}`
+      `http://localhost:3000/expense/getExpenses?page=${page}&paginate=${paginate}`
     );
     response.data.expenses.forEach((expense) => {
       displayExpense(expense);
@@ -371,10 +374,16 @@ const onDOMloaded = async () => {
     }
   }
 };
-
+const onPaginateRows = (e) => {
+  e.preventDefault();
+  const paginate = document.querySelector("#paginate-rows-number").value;
+  localStorage.setItem("paginate-rows", paginate);
+};
 form.addEventListener("submit", onSubmit);
 document.addEventListener("DOMContentLoaded", onDOMloaded);
 ul.addEventListener("click", onClick);
 goPremium.addEventListener("click", onGoPremium);
 paginationDiv.addEventListener("click", onPaginationBtnclick);
 paginationDivOthers.addEventListener("click", onPaginationBtnclickOthers);
+paginateRows.addEventListener("submit", onPaginateRows);
+console.log(paginateRows);

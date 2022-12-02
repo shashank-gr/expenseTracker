@@ -2,6 +2,7 @@ const AWS = require("aws-sdk");
 const { Op } = require("sequelize");
 const Expense = require("../model/expense");
 const FileLink = require("../model/file-link");
+const NUMBER_OF_EXPENSES_PER_PAGE = 5;
 
 const uploadToS3 = (fileData, fileName) => {
   const s3 = new AWS.S3({
@@ -37,14 +38,25 @@ exports.getIsPremium = async (req, res) => {
 
 exports.getAllExpenses = async (req, res) => {
   const userId = req.user.id;
+  const page = +req.query.page || 1;
   // console.log("userId>>>>>", userId);
   try {
-    const response = await Expense.findAll({
+    const { count, rows: expense } = await Expense.findAndCountAll({
       attributes: ["amount", "description", "category"],
       where: { userId: { [Op.ne]: userId } },
+      limit: NUMBER_OF_EXPENSES_PER_PAGE,
+      offset: (page - 1) * NUMBER_OF_EXPENSES_PER_PAGE,
     });
-    // console.log("Response>>>>>>>", response);
-    res.status(200).send({ expenses: response, msg: "success" });
+    const pagination = {
+      currentPage: page,
+      hasNextPage: count - page * NUMBER_OF_EXPENSES_PER_PAGE > 0,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(count / NUMBER_OF_EXPENSES_PER_PAGE),
+    };
+
+    res.status(200).send({ expenses: expense, pagination, msg: "success" });
   } catch (error) {
     console.log(error);
     res.status(500).send({ msg: "internal server error" });
@@ -60,7 +72,7 @@ exports.getGenerateReport = async (req, res) => {
     // console.log(expenses);
     const fileData = JSON.stringify(expenses); //always stringify the data to add to file
     const fileName = `expense${req.user.id}/${new Date()}.txt`;
-    const S3Result = await uploadToS3(fileData, fileName);
+    const S3Result = await uploadToS3(fileData, fileName); //only works when there is promise involved, not on functions
     // console.log(S3Result);//gives the file url
     await req.user.createFileLink({ fileURL: S3Result });
     res

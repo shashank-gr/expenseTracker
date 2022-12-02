@@ -1,14 +1,34 @@
 const Expense = require("../model/expense");
 
+const NUMBER_OF_EXPENSES_PER_PAGE = 5;
+
 exports.getAllExpenses = async (req, res) => {
   try {
-    const expenses = await req.user.getExpenses();
-    res.status(200).send({ expenses, msg: "Success, all expenses fetched" });
+    const page = +req.query.page || 1;
+    console.log(page);
+    const userId = req.user.id;
+    const { count, rows: expenses } = await Expense.findAndCountAll({
+      where: { userId },
+      limit: NUMBER_OF_EXPENSES_PER_PAGE,
+      offset: (page - 1) * NUMBER_OF_EXPENSES_PER_PAGE,
+    });
+    const pagination = {
+      currentPage: page,
+      hasNextPage: count - page * NUMBER_OF_EXPENSES_PER_PAGE > 0,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(count / NUMBER_OF_EXPENSES_PER_PAGE),
+    };
+    res
+      .status(200)
+      .send({ expenses, pagination, msg: "Success, all expenses fetched" });
   } catch (error) {
     console.log(error);
     res.status(500).send({ msg: "Internal server error" });
   }
 };
+
 exports.postAddExpense = async (req, res) => {
   // console.log(req.body);
   const { amount, description, category } = req.body;

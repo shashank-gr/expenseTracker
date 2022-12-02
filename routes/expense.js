@@ -9,7 +9,7 @@ router.post(
   expenseController.postAddExpense
 );
 router.get(
-  "/getExpense",
+  "/getExpenses",
   userMiddelware.userAuthenticate,
   expenseController.getAllExpenses
 );
